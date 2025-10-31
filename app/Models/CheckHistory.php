@@ -9,6 +9,8 @@ class CheckHistory extends Model
 {
     use HasFactory;
 
+    protected $table = 'check_history';
+    
     protected $fillable = ['check_id', 'user_id', 'action', 'details'];
 
     public function check()

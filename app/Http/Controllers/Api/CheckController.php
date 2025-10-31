@@ -14,7 +14,30 @@ class CheckController extends Controller
 {
     public function index(Request $request)
     {
-        return Check::with(['client', 'dossier', 'user'])->latest()->get();
+        $query = Check::with(['client', 'dossier', 'user', 'replacedBy']);
+
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('type')) {
+            $query->where('check_type', $request->type);
+        }
+
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('check_number', 'like', "%{$searchTerm}%")
+                  ->orWhere('bank_name', 'like', "%{$searchTerm}%")
+                  ->orWhere('check_type', 'like', "%{$searchTerm}%");
+            });
+        }
+
+        if ($request->input('pagination') === 'false') {
+            return $query->latest()->get();
+        }
+
+        return $query->latest()->paginate(15);
     }
 
     public function store(Request $request)
@@ -101,10 +124,12 @@ class CheckController extends Controller
         DB::transaction(function () use ($check, $newCheck, $originalDossierId) {
             $check->dossier_id = null;
             $check->status = 'remplacé';
+            $check->replaced_by_check_id = $newCheck->id;
             $check->save();
 
             $newCheck->dossier_id = $originalDossierId;
             $newCheck->status = 'utilisé';
+            $newCheck->replaced_check_id = $check->id;
             $newCheck->save();
 
             $check->history()->create([

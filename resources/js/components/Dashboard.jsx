@@ -6,6 +6,10 @@ import CheckManager from './checks/CheckManager';
 
 import DossierManager from './dossiers/DossierManager';
 
+import UserManager from './users/UserManager';
+
+import DashboardHome from './DashboardHome';
+
 function Dashboard() {
     const [view, setView] = useState('home'); // home, clients, checks, etc.
 
@@ -17,14 +21,11 @@ function Dashboard() {
                 return <CheckManager />;
             case 'dossiers':
                 return <DossierManager />;
+            case 'users':
+                return <UserManager />;
             case 'home':
             default:
-                return (
-                    <div>
-                        <h1>Tableau de Bord Principal</h1>
-                        <p>Statistiques et activités récentes à venir...</p>
-                    </div>
-                );
+                return <DashboardHome />;
         }
     };
 
@@ -52,6 +53,11 @@ function Dashboard() {
                             <li className="nav-item">
                                 <a className="nav-link" href="#" onClick={() => setView('dossiers')}>
                                     Dossiers
+                                </a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="#" onClick={() => setView('users')}>
+                                    Opérateurs
                                 </a>
                             </li>
                         </ul>

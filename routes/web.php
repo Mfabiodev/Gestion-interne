@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\CheckController;
 use App\Http\Controllers\Api\DossierController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -15,7 +16,7 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware('auth')->prefix('api')->group(function () {
-    Route::get('users', [UserController::class, 'index']);
+    Route::get('dashboard', [DashboardController::class, 'index']);
     Route::post('checks/import', [CheckController::class, 'import']);
     Route::get('checks/{check}/history', [CheckController::class, 'history']);
     Route::post('checks/{check}/replace', [CheckController::class, 'replace']);
@@ -24,4 +25,5 @@ Route::middleware('auth')->prefix('api')->group(function () {
     Route::post('clients/import', [ClientController::class, 'import']);
     Route::apiResource('dossiers', DossierController::class);
     Route::apiResource('checks', CheckController::class);
+    Route::apiResource('users', UserController::class);
 });

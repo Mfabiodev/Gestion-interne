@@ -6,8 +6,8 @@ function AssignCheckModal({ dossier, onClose, onCheckAssigned }) {
     const [selectedCheck, setSelectedCheck] = useState('');
 
     useEffect(() => {
-        // Fetch checks with status 'disponible'
-        axios.get('/api/checks?status=disponible')
+        // Fetch all available checks, no pagination
+        axios.get('/api/checks?status=disponible&pagination=false')
             .then(response => {
                 setAvailableChecks(response.data);
             })

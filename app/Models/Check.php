@@ -20,6 +20,8 @@ class Check extends Model
         'client_id',
         'dossier_id',
         'user_id',
+        'replaced_by_check_id',
+        'replaced_check_id',
     ];
 
     public function client()
@@ -40,5 +42,15 @@ class Check extends Model
     public function history()
     {
         return $this->hasMany(CheckHistory::class);
+    }
+
+    public function replacedBy()
+    {
+        return $this->belongsTo(Check::class, 'replaced_by_check_id');
+    }
+
+    public function replacementFor()
+    {
+        return $this->hasOne(Check::class, 'replaced_by_check_id');
     }
 }

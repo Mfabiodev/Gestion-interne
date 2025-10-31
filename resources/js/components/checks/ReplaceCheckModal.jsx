@@ -6,7 +6,7 @@ function ReplaceCheckModal({ checkToReplace, onClose, onCheckReplaced }) {
     const [selectedCheck, setSelectedCheck] = useState('');
 
     useEffect(() => {
-        axios.get('/api/checks?status=disponible')
+        axios.get('/api/checks?status=disponible&pagination=false')
             .then(response => {
                 setAvailableChecks(response.data);
             })
@@ -21,7 +21,10 @@ function ReplaceCheckModal({ checkToReplace, onClose, onCheckReplaced }) {
                 onCheckReplaced();
                 onClose();
             })
-            .catch(error => console.error('Error replacing check:', error.response.data));
+            .catch(error => {
+                console.error('Error replacing check:', error.response.data);
+                alert(error.response.data.message || 'Une erreur est survenue.');
+            });
     };
 
     return (
@@ -29,11 +32,11 @@ function ReplaceCheckModal({ checkToReplace, onClose, onCheckReplaced }) {
             <div className="modal-dialog">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title">Remplacer le chèque: {checkToReplace.check_number}</h5>
+                        <h5 className="modal-title">Remplacer le chèque {checkToReplace.check_number}</h5>
                         <button type="button" className="btn-close" onClick={onClose}></button>
                     </div>
                     <div className="modal-body">
-                        <p>Sélectionnez un chèque disponible pour remplacer celui-ci.</p>
+                        <p>Sélectionnez un chèque disponible pour remplacer l'ancien.</p>
                         <select
                             className="form-select"
                             value={selectedCheck}
